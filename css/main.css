@@ -1,0 +1,9 @@
+html, body, canvas {
+    margin: 0px;
+    padding: 0px;
+}
+.paintboard {
+    width: 1500px;
+    margin: 20px auto;
+    border: 1px solid #e8e8e8;
+}

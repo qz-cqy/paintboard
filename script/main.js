@@ -95,9 +95,11 @@ let canvas = document.querySelector(".paintboard canvas");
 let cvs = canvas.getContext("2d");
 let a = new run(canvas);
 
-let clean = document.querySelector(".clean");
+let clean = document.querySelector(".clear");
 let random = document.querySelector(".random");
-let down = document.querySelector(".down");
+let setcolor = document.querySelector(".setcolor");
+let eraser = document.querySelector(".eraser");
+let down = document.querySelector(".download");
 
 clean.onclick = function () {
     a.clean();

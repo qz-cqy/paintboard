@@ -67,7 +67,7 @@ run.prototype.Random = function (length) {
     }
 }
 
-run.prototype.clean = function () {
+run.prototype.clear = function () {
     this.clickedArr.forEach(function (o, index) {
         this.drawBgBox(o.x * this.boxSize, o.y * this.boxSize);
     }.bind(this));
@@ -95,14 +95,14 @@ let canvas = document.querySelector(".paintboard canvas");
 let cvs = canvas.getContext("2d");
 let a = new run(canvas);
 
-let clean = document.querySelector(".clear");
+let clear = document.querySelector(".clear");
 let random = document.querySelector(".random");
 let setcolor = document.querySelector(".setcolor");
 let eraser = document.querySelector(".eraser");
 let down = document.querySelector(".download");
 
-clean.onclick = function () {
-    a.clean();
+clear.onclick = function () {
+    a.clear();
 };
 
 random.onclick = function () {

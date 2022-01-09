@@ -84,7 +84,8 @@ run.prototype.drawBg = function () {
 run.prototype.drawBgBox = function (x, y, z) {
     this.cvs.beginPath();
     this.cvs.fillStyle = z ? this.clickedColor : this.bgColor;
-    this.cvs.fillRect(x + 1, y + 1, this.boxSize - 1, this.boxSize - 1);
+    // this.cvs.fillRect(x + 1, y + 1, this.boxSize - 1, this.boxSize - 1);
+    this.cvs.fillRect(x, y, this.boxSize, this.boxSize);
     this.cvs.fill();
     this.cvs.stroke();
     this.cvs.closePath();

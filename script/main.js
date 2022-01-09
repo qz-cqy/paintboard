@@ -139,7 +139,7 @@ eraser.onclick = function () {
     var input = document.getElementsByName("color")[0];
     input.value = a.bgColor;
     a.clickedColor = a.bgColor;
-}
+};
 
 down.onclick = function () {
     let imgUrl = canvas.toDataURL('image/png');

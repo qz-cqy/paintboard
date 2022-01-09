@@ -7,7 +7,6 @@ function run(canvas, obj) {
     this.boxSize = obj.boxSize || 5;
     this.bgWidthLength = 0;
     this.bgHeightLength = 0;
-    this.clickedArr = [];
     this.start();
     this.click();
     return this;

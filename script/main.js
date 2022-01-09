@@ -52,20 +52,20 @@ run.prototype.computedXY = function (x, y) {
             break;
         }
     }
-    return {x, y};
+    return { x, y };
 };
 
-function calcPos(x, y) {
-    return y * a.bgWidthLength + x + 1;
+run.prototype.calcPos = function(x, y) {
+    return y * this.bgWidthLength + x + 1;
 }
 
 run.prototype.doClick = function (o, draw) {
-    let pos = calcPos(o.x, o.y);
+    let pos = this.calcPos(o.x, o.y);
     console.log(o, pos);
     o.c = this.color[pos] != null ? this.color[pos] : this.bgColor;
     o.t = this.clickedColor;
     ++this.step;
-    if(this.step < this.history.length) this.history.length = this.step;
+    if (this.step < this.history.length) this.history.length = this.step;
     this.history.push(o);
     this.color[pos] = this.clickedColor;
     this.drawBgBox(o.x * this.boxSize, o.y * this.boxSize, this.clickedColor);
@@ -90,10 +90,48 @@ run.prototype.clear = function () {
     this.color = {};
 };
 
+run.prototype.undo = function () {
+    if (this.step == -1) alert("不能再继续撤销了！");
+    else {
+        let x = this.history[this.step].x;
+        let y = this.history[this.step].y;
+        let c = this.history[this.step].c;
+        let t = this.history[this.step].t;
+        this.color[this.calcPos(x, y)] = c;
+        this.drawBgBox(x * this.boxSize, y * this.boxSize, c);
+        --this.step;
+    }
+};
+
+run.prototype.redo = function () {
+    if (this.step == this.history.length - 1) alert("已经是最后一步了！");
+    else {
+        ++this.step;
+        let x = this.history[this.step].x;
+        let y = this.history[this.step].y;
+        let c = this.history[this.step].c;
+        let t = this.history[this.step].t;
+        this.color[this.calcPos(x, y)] = t;
+        this.drawBgBox(x * this.boxSize, y * this.boxSize, t);
+    }
+};
+
 run.prototype.drawBg = function () {
     for (let i = 0; i < this.bgHeightLength; i++) {
         for (let j = 0; j < this.bgWidthLength; j++) {
             this.drawBgBox(j * this.boxSize, i * this.boxSize, this.bgColor);
+        }
+    }
+    this.load();
+};
+
+run.prototype.load = function () {
+    console.log("loading...");
+    let tmp = localStorage.ruier_paintboard;
+    if (tmp != null && tmp != undefined && tmp != "undefined") {
+        this.history = JSON.parse(tmp);
+        while (this.step < this.history.length - 1) {
+            this.redo();
         }
     }
 };
@@ -117,35 +155,36 @@ let setcolor = document.querySelector(".setcolor");
 let eraser = document.querySelector(".eraser");
 let undo = document.querySelector(".undo");
 let redo = document.querySelector(".redo");
+let save = document.querySelector(".save");
 let down = document.querySelector(".download");
 
 function autoDownload() {
     let checkbox = document.getElementsByName("autodownload")[0];
-    if(checkbox.checked) return true;
+    if (checkbox.checked) return true;
     return false;
 }
 
 clear.onclick = function () {
-    if(autoDownload()) down.click();
+    if (autoDownload()) down.click();
     a.clear();
 };
 
 random.onclick = function () {
-    if(autoDownload()) down.click();
+    if (autoDownload()) down.click();
     a.Random(100);
 };
 
-setcolor.onclick = function() {
+setcolor.onclick = function () {
     let input = document.getElementsByName("color")[0];
     let regex1 = /^\#[0-9a-f]{3}$/, regex2 = /^#[0-9a-f]{6}$/;
     let x = regex1.exec(input.value), y = regex2.exec(input.value);
-    if(x != null) {
-        input.value = x;
-        a.clickedColor = x;
+    if (x != null) {
+        input.value = x[0];
+        a.clickedColor = x[0];
     }
-    else if(y != null) {
-        input.value = y;
-        a.clickedColor = y;
+    else if (y != null) {
+        input.value = y[0];
+        a.clickedColor = y[0];
     }
     else {
         input.value = "16 进制颜色代码不合法！";
@@ -160,29 +199,11 @@ eraser.onclick = function () {
 };
 
 undo.onclick = function () {
-    if(a.step == -1) alert("不能再继续撤销了！");
-    else {
-        x = a.history[a.step].x;
-        y = a.history[a.step].y;
-        c = a.history[a.step].c;
-        t = a.history[a.step].t;
-        a.color[calcPos(x, y)] = c;
-        a.drawBgBox(x * a.boxSize, y * a.boxSize, c);
-        --a.step;
-    }
+    a.undo();
 }
 
 redo.onclick = function () {
-    if(a.step == a.history.length - 1) alert("已经是最后一步了！");
-    else {
-        ++a.step;
-        x = a.history[a.step].x;
-        y = a.history[a.step].y;
-        c = a.history[a.step].c;
-        t = a.history[a.step].t;
-        a.color[calcPos(x, y)] = t;
-        a.drawBgBox(x * a.boxSize, y * a.boxSize, t);
-    }
+    a.redo();
 }
 
 down.onclick = function () {
@@ -194,3 +215,13 @@ down.onclick = function () {
     saveA.target = '_blank';
     saveA.click();
 };
+
+save.onclick = function () {
+    console.log("saved!");
+    localStorage.ruier_paintboard = JSON.stringify(a.history);
+}
+
+setInterval(function () {
+    let checkbox = document.getElementsByName("autosave")[0];
+    if (checkbox.checked) save.click();
+}, 60000);

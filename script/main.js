@@ -2,7 +2,7 @@ function run(canvas, obj) {
     obj = obj || {};
     this.canvas = canvas;
     this.cvs = canvas.getContext("2d");
-    this.bgColor = obj.bgColor || "#ffffff";
+    this.bgColor = obj.bgColor || "#e8e8e8";
     this.clickedColor = obj.clickedColor || "#000000";
     this.boxSize = obj.boxSize || 5;
     this.bgWidthLength = 0;
@@ -101,13 +101,23 @@ let setcolor = document.querySelector(".setcolor");
 let eraser = document.querySelector(".eraser");
 let down = document.querySelector(".download");
 
+function autoDownload() {
+    var checkbox = document.getElementsByClassName("autodownload")[0];
+    if(checkbox.checked) return true;
+    return false;
+}
+
 clear.onclick = function () {
+    if(autoDownload()) down.click();
     a.clear();
 };
 
 random.onclick = function () {
+    if(autoDownload()) down.click();
     a.Random(100);
 };
+
+setcolor.onclick = function() {};
 
 down.onclick = function () {
     let imgUrl = canvas.toDataURL('image/png');
@@ -117,4 +127,4 @@ down.onclick = function () {
     saveA.download = 'mypic' + (new Date).getTime();
     saveA.target = '_blank';
     saveA.click();
-}
+};

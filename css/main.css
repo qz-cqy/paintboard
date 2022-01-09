@@ -2,8 +2,24 @@ html, body, canvas {
     margin: 0px;
     padding: 0px;
 }
+
 .paintboard {
     width: 1500px;
     margin: 20px auto;
+}
+
+canvas {
     border: 1px solid #e8e8e8;
+}
+
+button {
+    border-radius: 10%;
+}
+
+.dangerous {
+    background-color: red;
+}
+
+.safe {
+    background-color: green;
 }

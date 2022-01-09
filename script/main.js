@@ -102,7 +102,7 @@ let eraser = document.querySelector(".eraser");
 let down = document.querySelector(".download");
 
 function autoDownload() {
-    var checkbox = document.getElementsByClassName("autodownload")[0];
+    var checkbox = document.getElementsByName("autodownload")[0];
     if(checkbox.checked) return true;
     return false;
 }
@@ -117,7 +117,29 @@ random.onclick = function () {
     a.Random(100);
 };
 
-setcolor.onclick = function() {};
+setcolor.onclick = function() {
+    var input = document.getElementsByName("color")[0];
+    var regex1 = /^\#[0-9a-f]{3}$/, regex2 = /^#[0-9a-f]{6}$/;
+    var x = regex1.exec(input.value), y = regex2.exec(input.value);
+    if(x != null) {
+        input.value = x;
+        a.clickedColor = x;
+    }
+    else if(y != null) {
+        input.value = y;
+        a.clickedColor = y;
+    }
+    else {
+        input.value = "16 进制颜色代码不合法！";
+        alert("16 进制颜色代码不合法！");
+    }
+};
+
+eraser.onclick = function () {
+    var input = document.getElementsByName("color")[0];
+    input.value = a.bgColor;
+    a.clickedColor = a.bgColor;
+}
 
 down.onclick = function () {
     let imgUrl = canvas.toDataURL('image/png');

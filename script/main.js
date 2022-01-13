@@ -145,6 +145,11 @@ run.prototype.drawBgBox = function (x, y, c) {
     this.cvs.closePath();
 };
 
+run.prototype.setBoardSize = function(w, h) {
+    this.canvas.width = w;
+    this.canvas.height = h;
+}
+
 let canvas = document.querySelector(".paintboard canvas");
 let cvs = canvas.getContext("2d");
 let a = new run(canvas);
@@ -155,6 +160,7 @@ let setcolor = document.querySelector(".setcolor");
 let eraser = document.querySelector(".eraser");
 let undo = document.querySelector(".undo");
 let redo = document.querySelector(".redo");
+let setboardsize = document.querySelector(".setboardsize");
 let save = document.querySelector(".save");
 let down = document.querySelector(".download");
 
@@ -221,7 +227,28 @@ save.onclick = function () {
     localStorage.ruier_paintboard = JSON.stringify(a.history);
 }
 
+setboardsize.onclick = function() {
+    let input = document.getElementsByName("boardsize")[0];
+    let regex = /^\d{1,4}\*\d{1,4}$/;
+    if (regex.test(input.value)) {
+        let tmp = input.value.match(/\d{1,4}/g), width = tmp[0], height = tmp[1];
+        if (height < 1 || height > 1500 || width < 1 || width > 1500) {
+            input.value = "";
+            alert("格式为 长*宽，范围为 1~1500");
+            return;
+        }
+        a.setBoardSize(width, height);
+        a.start();
+    }
+    else {
+        input.value = "";
+        alert("格式为 长*宽，范围为 1~1500");
+    }
+}
+
 setInterval(function () {
     let checkbox = document.getElementsByName("autosave")[0];
     if (checkbox.checked) save.click();
 }, 60000);
+
+// vim:set et ts=4 sw=4:
